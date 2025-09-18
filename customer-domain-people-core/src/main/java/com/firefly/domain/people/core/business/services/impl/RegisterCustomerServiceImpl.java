@@ -4,10 +4,13 @@ import com.firefly.domain.people.core.business.commands.*;
 import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
 import com.firefly.domain.people.core.business.services.RegisterCustomerService;
 import com.firefly.domain.people.core.business.workflows.AddAddressSaga;
+import com.firefly.domain.people.core.business.workflows.AddEmailSaga;
 import com.firefly.domain.people.core.business.workflows.RegisterCustomerSaga;
 import com.firefly.domain.people.core.business.workflows.RemoveAddressSaga;
+import com.firefly.domain.people.core.business.workflows.RemoveEmailSaga;
 import com.firefly.domain.people.core.business.workflows.UpdateAddressSaga;
 import com.firefly.domain.people.core.business.workflows.UpdateCustomerNameSaga;
+import com.firefly.domain.people.core.business.workflows.UpdateEmailSaga;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.ExpandEach;
 import com.firefly.transactional.engine.SagaEngine;
@@ -86,6 +89,34 @@ public class RegisterCustomerServiceImpl implements RegisterCustomerService {
                 .build();
 
         return engine.execute(RemoveAddressSaga.class, inputs);
+    }
+
+    @Override
+    public Mono<SagaResult> addEmail(UUID partyId, RegisterEmailCommand emailCommand) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(AddEmailSaga::registerEmail, emailCommand.withPartyId(partyId))
+                .build();
+
+        return engine.execute(AddEmailSaga.class, inputs);
+    }
+
+    @Override
+    public Mono<Void> updateEmail(UUID partyId, UUID emailId, UpdateEmailCommand emailData) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(UpdateEmailSaga::updateEmail, emailData.withEmailContactId(emailId).withPartyId(partyId))
+                .build();
+
+        return engine.execute(UpdateEmailSaga.class, inputs)
+                .then();
+    }
+
+    @Override
+    public Mono<SagaResult> removeEmail(UUID partyId, UUID emailId) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(RemoveEmailSaga::removeEmail, new RemoveEmailCommand(partyId, emailId))
+                .build();
+
+        return engine.execute(RemoveEmailSaga.class, inputs);
     }
 
 }

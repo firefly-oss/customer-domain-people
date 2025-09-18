@@ -66,4 +66,33 @@ public class CustomersController {
                 .thenReturn(ResponseEntity.ok().build());
     }
 
+    // Email endpoints
+    @PostMapping("/{partyId}/emails")
+    @Operation(summary = "Add customer email", description = "Add email; validate format and uniqueness within customer.")
+    public Mono<ResponseEntity<Object>> addCustomerEmail(
+            @PathVariable("partyId") UUID partyId,
+            @RequestBody @Valid RegisterEmailCommand emailCommand) {
+        return customerService.addEmail(partyId, emailCommand)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PutMapping("/{partyId}/emails/{emailId}")
+    @Operation(summary = "Update customer email", description = "Modify email fields keeping version history.")
+    public Mono<ResponseEntity<Object>> updateCustomerEmail(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("emailId") UUID emailId,
+            @RequestBody UpdateEmailCommand emailData) {
+        return customerService.updateEmail(partyId, emailId, emailData)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @DeleteMapping("/{partyId}/emails/{emailId}")
+    @Operation(summary = "Remove customer email", description = "Remove email from profile.")
+    public Mono<ResponseEntity<Object>> removeCustomerEmail(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("emailId") UUID emailId) {
+        return customerService.removeEmail(partyId, emailId)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
 }
