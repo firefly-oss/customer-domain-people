@@ -4,6 +4,7 @@ import com.firefly.domain.people.core.business.commands.*;
 import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
 import com.firefly.domain.people.core.business.services.RegisterCustomerService;
 import com.firefly.domain.people.core.business.workflows.*;
+import com.firefly.domain.people.core.business.workflows.constants.StatusTypeEnum;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.ExpandEach;
 import com.firefly.transactional.engine.SagaEngine;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -148,5 +150,14 @@ public class RegisterCustomerServiceImpl implements RegisterCustomerService {
 
         return engine.execute(SetPreferredChannelSaga.class, inputs)
                 .then();
+    }
+
+    // Status operations
+    @Override
+    public Mono<SagaResult> updateStatus(UpdateStatusCommand cmd) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(UpdateStatusSaga::updateStatus, cmd)
+                .build();
+        return engine.execute(UpdateStatusSaga.class, inputs);
     }
 }

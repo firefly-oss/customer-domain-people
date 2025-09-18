@@ -22,7 +22,7 @@ public class RegisterPartyStatusEntryHandler extends CommandHandler<RegisterPart
     protected Mono<UUID> doHandle(RegisterPartyStatusEntryCommand cmd) {
         return partyStatusesApi
                 .createPartyStatus(cmd.getPartyId(), cmd, UUID.randomUUID().toString())
-                .mapNotNull(response ->
-                        Objects.requireNonNull(response.getPartyStatusId()));
+                .mapNotNull(partyStatusDTO ->
+                        Objects.requireNonNull(partyStatusDTO.getPartyStatusId()));
     }
 }

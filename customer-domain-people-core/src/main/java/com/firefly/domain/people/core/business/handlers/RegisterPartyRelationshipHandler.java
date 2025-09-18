@@ -24,7 +24,7 @@ public class RegisterPartyRelationshipHandler extends CommandHandler<RegisterPar
     protected Mono<UUID> doHandle(RegisterPartyRelationshipCommand cmd) {
         return partyRelationshipsApi
                 .createPartyRelationship(cmd.getToPartyId(), cmd, UUID.randomUUID().toString())
-                .mapNotNull(partyProviderDTO ->
-                        Objects.requireNonNull(Objects.requireNonNull(partyProviderDTO).getPartyRelationshipId()));
+                .mapNotNull(partyRelationshipDTO ->
+                        Objects.requireNonNull(Objects.requireNonNull(partyRelationshipDTO).getPartyRelationshipId()));
     }
 }

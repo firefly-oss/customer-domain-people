@@ -23,7 +23,7 @@ public class UpdateEmailHandler extends CommandHandler<UpdateEmailCommand, UUID>
     @Override
     protected Mono<UUID> doHandle(UpdateEmailCommand cmd) {
         return emailContactsApi.updateEmailContact(cmd.getPartyId(), cmd.getEmailContactId(), cmd, UUID.randomUUID().toString())
-                .mapNotNull(naturalPersonDTO ->
-                        Objects.requireNonNull(Objects.requireNonNull(naturalPersonDTO).getEmailContactId()));
+                .mapNotNull(emailContactDTO ->
+                        Objects.requireNonNull(Objects.requireNonNull(emailContactDTO).getEmailContactId()));
     }
 }

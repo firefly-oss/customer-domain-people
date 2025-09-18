@@ -1,8 +1,10 @@
 package com.firefly.domain.people.web.controller;
 
+import com.firefly.core.customer.sdk.model.PartyStatusDTO;
 import com.firefly.domain.people.core.business.commands.*;
 import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
 import com.firefly.domain.people.core.business.services.RegisterCustomerService;
+import com.firefly.domain.people.core.business.workflows.constants.StatusTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -131,6 +133,77 @@ public class CustomersController {
             @PathVariable("partyId") UUID partyId,
             @RequestBody UpdatePreferredChannelCommand channelData) {
         return customerService.setPreferredChannel(partyId, channelData)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    // Status management endpoints
+    @PostMapping("/{partyId}/dormant")
+    @Operation(summary = "Mark customer dormant", description = "Flag profile as dormant due to inactivity.")
+    public Mono<ResponseEntity<Object>> markCustomerDormant(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.INACTIVE)
+                        .withReason("User has been marked as dormant due to inactivity"))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/{partyId}/reactivate")
+    @Operation(summary = "Reactivate customer", description = "Reactivate a dormant profile.")
+    public Mono<ResponseEntity<Object>> reactivateCustomer(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.ACTIVE)
+                        .withReason("User account has been reactivated and is now fully usable"))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/{partyId}/deceased")
+    @Operation(summary = "Mark customer deceased", description = "Mark as deceased and block dependent operations.")
+    public Mono<ResponseEntity<Object>> markCustomerDeceased(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.CLOSED)
+                        .withReason("User account is permanently closed because the user is deceased"))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/{partyId}/closure-request")
+    @Operation(summary = "Request customer closure", description = "Request customer closure once obligations are zero.")
+    public Mono<ResponseEntity<Object>> requestCustomerClosure(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.PENDING)
+                        .withReason("A closure request has been submitted but is not yet confirmed"))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/{partyId}/confirm-closure")
+    @Operation(summary = "Confirm customer closure", description = "Confirm closure after checks pass.")
+    public Mono<ResponseEntity<Object>> confirmCustomerClosure(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.CLOSED)
+                        .withReason("Closure has been confirmed and the account is permanently closed"))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/{partyId}/lock")
+    @Operation(summary = "Lock customer profile", description = "Lock profile for audit/investigation; block writes.")
+    public Mono<ResponseEntity<Object>> lockCustomerProfile(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.SUSPENDED)
+                        .withReason("Profile is temporarily locked, restricting access and activity"))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/{partyId}/unlock")
+    @Operation(summary = "Unlock customer profile", description = "Unlock profile for changes.")
+    public Mono<ResponseEntity<Object>> unlockCustomerProfile(@PathVariable("partyId") UUID partyId) {
+        return customerService.updateStatus(new UpdateStatusCommand()
+                        .withPartyId(partyId)
+                        .withStatusCode(PartyStatusDTO.StatusCodeEnum.ACTIVE)
+                        .withReason("Lock has been removed; user profile is restored to active status"))
                 .thenReturn(ResponseEntity.ok().build());
     }
 

@@ -41,6 +41,7 @@ public class RegisterCustomerConstants {
     public static final String STEP_UPDATE_PHONE = "updatePhone";
     public static final String STEP_REMOVE_PHONE = "removePhone";
     public static final String STEP_UPDATE_CHANNEL = "updateChannel";
+    public static final String STEP_UPDATE_STATUS = "updateStatus";
 
     // ============================== COMPENSATE METHODS ==============================
     public static final String COMPENSATE_REMOVE_PARTY = "removeParty";
@@ -83,6 +84,7 @@ public class RegisterCustomerConstants {
     public static final String EVENT_PHONE_UPDATED = "phone.updated";
     public static final String EVENT_PHONE_REMOVED = "phone.removed";
     public static final String EVENT_PREFERRED_CHANNEL_UPDATED = "preferredChannel.updated";
+    public static final String EVENT_STATUS_UPDATED = "status.updated";
 
 
 }

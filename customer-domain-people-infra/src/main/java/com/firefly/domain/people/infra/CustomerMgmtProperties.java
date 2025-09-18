@@ -1,7 +1,6 @@
 package com.firefly.domain.people.infra;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties(prefix = "api-configuration.common-platform.customer-mgmt")
-@Getter
-@Setter
+@Data
 public class CustomerMgmtProperties {
 
     private String basePath;

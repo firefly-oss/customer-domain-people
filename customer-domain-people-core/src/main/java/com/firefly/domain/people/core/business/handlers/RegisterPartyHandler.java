@@ -25,7 +25,7 @@ public class RegisterPartyHandler extends CommandHandler<RegisterPartyCommand, U
 
         return partiesApi
                 .createParty(cmd, UUID.randomUUID().toString())
-                .mapNotNull(partyDTOResponseEntity ->
-                        Objects.requireNonNull(Objects.requireNonNull(partyDTOResponseEntity).getPartyId()));
+                .mapNotNull(partyDTO ->
+                        Objects.requireNonNull(Objects.requireNonNull(partyDTO).getPartyId()));
     }
 }

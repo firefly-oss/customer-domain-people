@@ -24,7 +24,7 @@ public class RegisterPartyGroupMembershipHandler extends CommandHandler<Register
     protected Mono<UUID> doHandle(RegisterPartyGroupMembershipCommand cmd) {
         return partyGroupMembershipsApi
                 .createPartyGroupMembership(cmd.getPartyId(), cmd, UUID.randomUUID().toString())
-                .mapNotNull(partyProviderDTO ->
-                        Objects.requireNonNull(Objects.requireNonNull(partyProviderDTO).getPartyGroupMembershipId()));
+                .mapNotNull(partyGroupMembershipDTO ->
+                        Objects.requireNonNull(Objects.requireNonNull(partyGroupMembershipDTO).getPartyGroupMembershipId()));
     }
 }

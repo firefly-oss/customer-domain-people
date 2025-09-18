@@ -23,7 +23,7 @@ public class RegisterPhoneHandler extends CommandHandler<RegisterPhoneCommand, U
     protected Mono<UUID> doHandle(RegisterPhoneCommand cmd) {
         return phoneContactsApi
                 .createPhoneContact(cmd.getPartyId(), cmd, UUID.randomUUID().toString())
-                .mapNotNull(addressDTO ->
-                        Objects.requireNonNull(Objects.requireNonNull(addressDTO).getPhoneContactId()));
+                .mapNotNull(phoneContactDTO ->
+                        Objects.requireNonNull(Objects.requireNonNull(phoneContactDTO).getPhoneContactId()));
     }
 }
