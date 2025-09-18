@@ -36,4 +36,15 @@ public class UpdatePhoneCommand extends PhoneContactDTO implements Command<UUID>
         return this;
     }
 
+    /**
+     * Sets the primary status for this email and returns the command instance for method chaining.
+     *
+     * @param primary the primary status to assign to this email
+     * @return this command instance for method chaining
+     */
+    public UpdatePhoneCommand withPrimary(Boolean primary) {
+        this.setIsPrimary(primary);
+        return this;
+    }
+
 }

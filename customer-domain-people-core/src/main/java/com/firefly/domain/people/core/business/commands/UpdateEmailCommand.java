@@ -25,7 +25,6 @@ public class UpdateEmailCommand extends EmailContactDTO implements Command<UUID>
         return this;
     }
 
-
     /**
      * Sets the email contact ID for this command and returns the command instance for method chaining.
      *
@@ -34,6 +33,17 @@ public class UpdateEmailCommand extends EmailContactDTO implements Command<UUID>
      */
     public UpdateEmailCommand withEmailContactId(UUID emailId) {
         this.setEmailContactId(emailId);
+        return this;
+    }
+
+    /**
+     * Sets the primary status for this email and returns the command instance for method chaining.
+     *
+     * @param primary the primary status to assign to this email
+     * @return this command instance for method chaining
+     */
+    public UpdateEmailCommand withPrimary(Boolean primary) {
+        this.setIsPrimary(primary);
         return this;
     }
 

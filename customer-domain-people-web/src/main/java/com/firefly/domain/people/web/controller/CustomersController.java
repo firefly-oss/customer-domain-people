@@ -124,4 +124,14 @@ public class CustomersController {
                 .thenReturn(ResponseEntity.ok().build());
     }
 
+    // Preferred channel endpoint
+    @PostMapping("/{partyId}/preferred-channel")
+    @Operation(summary = "Set preferred channel", description = "Set preferred contact channel (email/phone); one per type.")
+    public Mono<ResponseEntity<Object>> setPreferredChannel(
+            @PathVariable("partyId") UUID partyId,
+            @RequestBody UpdatePreferredChannelCommand channelData) {
+        return customerService.setPreferredChannel(partyId, channelData)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
 }

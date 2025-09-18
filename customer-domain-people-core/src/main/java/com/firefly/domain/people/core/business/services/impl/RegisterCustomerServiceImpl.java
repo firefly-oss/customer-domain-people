@@ -3,17 +3,7 @@ package com.firefly.domain.people.core.business.services.impl;
 import com.firefly.domain.people.core.business.commands.*;
 import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
 import com.firefly.domain.people.core.business.services.RegisterCustomerService;
-import com.firefly.domain.people.core.business.workflows.AddAddressSaga;
-import com.firefly.domain.people.core.business.workflows.AddEmailSaga;
-import com.firefly.domain.people.core.business.workflows.AddPhoneSaga;
-import com.firefly.domain.people.core.business.workflows.RegisterCustomerSaga;
-import com.firefly.domain.people.core.business.workflows.RemoveAddressSaga;
-import com.firefly.domain.people.core.business.workflows.RemoveEmailSaga;
-import com.firefly.domain.people.core.business.workflows.RemovePhoneSaga;
-import com.firefly.domain.people.core.business.workflows.UpdateAddressSaga;
-import com.firefly.domain.people.core.business.workflows.UpdateCustomerNameSaga;
-import com.firefly.domain.people.core.business.workflows.UpdateEmailSaga;
-import com.firefly.domain.people.core.business.workflows.UpdatePhoneSaga;
+import com.firefly.domain.people.core.business.workflows.*;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.ExpandEach;
 import com.firefly.transactional.engine.SagaEngine;
@@ -150,4 +140,13 @@ public class RegisterCustomerServiceImpl implements RegisterCustomerService {
         return engine.execute(RemovePhoneSaga.class, inputs);
     }
 
+    @Override
+    public Mono<Void> setPreferredChannel(UUID partyId, UpdatePreferredChannelCommand channelData) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(SetPreferredChannelSaga::updateChannel, channelData.withPartyId(partyId))
+                .build();
+
+        return engine.execute(SetPreferredChannelSaga.class, inputs)
+                .then();
+    }
 }

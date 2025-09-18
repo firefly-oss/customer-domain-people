@@ -119,4 +119,14 @@ public interface RegisterCustomerService {
      */
     Mono<SagaResult> removePhone(UUID partyId, UUID phoneId);
 
+    /**
+     * Sets the preferred communication channel for a specific customer/party based on the provided command.
+     * This operation updates the preference to ensure future communication aligns with the customer's choice.
+     *
+     * @param partyId the unique identifier of the customer/party whose preferred channel is being updated
+     * @param channelData the command containing the preferred channel information (e.g., email or phone)
+     * @return a Mono of Void, completing when the preferred channel update is successful
+     */
+    Mono<Void> setPreferredChannel(UUID partyId, UpdatePreferredChannelCommand channelData);
+
 }
