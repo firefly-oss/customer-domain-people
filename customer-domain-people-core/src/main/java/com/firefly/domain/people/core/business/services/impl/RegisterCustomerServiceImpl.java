@@ -5,12 +5,15 @@ import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
 import com.firefly.domain.people.core.business.services.RegisterCustomerService;
 import com.firefly.domain.people.core.business.workflows.AddAddressSaga;
 import com.firefly.domain.people.core.business.workflows.AddEmailSaga;
+import com.firefly.domain.people.core.business.workflows.AddPhoneSaga;
 import com.firefly.domain.people.core.business.workflows.RegisterCustomerSaga;
 import com.firefly.domain.people.core.business.workflows.RemoveAddressSaga;
 import com.firefly.domain.people.core.business.workflows.RemoveEmailSaga;
+import com.firefly.domain.people.core.business.workflows.RemovePhoneSaga;
 import com.firefly.domain.people.core.business.workflows.UpdateAddressSaga;
 import com.firefly.domain.people.core.business.workflows.UpdateCustomerNameSaga;
 import com.firefly.domain.people.core.business.workflows.UpdateEmailSaga;
+import com.firefly.domain.people.core.business.workflows.UpdatePhoneSaga;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.ExpandEach;
 import com.firefly.transactional.engine.SagaEngine;
@@ -117,6 +120,34 @@ public class RegisterCustomerServiceImpl implements RegisterCustomerService {
                 .build();
 
         return engine.execute(RemoveEmailSaga.class, inputs);
+    }
+
+    @Override
+    public Mono<SagaResult> addPhone(UUID partyId, RegisterPhoneCommand phoneCommand) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(AddPhoneSaga::registerPhone, phoneCommand.withPartyId(partyId))
+                .build();
+
+        return engine.execute(AddPhoneSaga.class, inputs);
+    }
+
+    @Override
+    public Mono<Void> updatePhone(UUID partyId, UUID phoneId, UpdatePhoneCommand phoneData) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(UpdatePhoneSaga::updatePhone, phoneData.withPhoneContactId(phoneId).withPartyId(partyId))
+                .build();
+
+        return engine.execute(UpdatePhoneSaga.class, inputs)
+                .then();
+    }
+
+    @Override
+    public Mono<SagaResult> removePhone(UUID partyId, UUID phoneId) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(RemovePhoneSaga::removePhone, new RemovePhoneCommand(partyId, phoneId))
+                .build();
+
+        return engine.execute(RemovePhoneSaga.class, inputs);
     }
 
 }

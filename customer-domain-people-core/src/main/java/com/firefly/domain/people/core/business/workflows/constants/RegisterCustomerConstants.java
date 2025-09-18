@@ -11,6 +11,9 @@ public class RegisterCustomerConstants {
     public static final String SAGA_ADD_EMAIL_NAME = "AddEmailSaga";
     public static final String SAGA_UPDATE_EMAIL_NAME = "UpdateEmailSaga";
     public static final String SAGA_REMOVE_EMAIL_NAME = "RemoveEmailSaga";
+    public static final String SAGA_ADD_PHONE_NAME = "AddPhoneSaga";
+    public static final String SAGA_UPDATE_PHONE_NAME = "UpdatePhoneSaga";
+    public static final String SAGA_REMOVE_PHONE_NAME = "RemovePhoneSaga";
 
     // ============================== STEP IDENTIFIERS ==============================
     public static final String STEP_REGISTER_PARTY = "registerParty";
@@ -34,6 +37,8 @@ public class RegisterCustomerConstants {
     public static final String STEP_REMOVE_ADDRESS = "removeAddress";
     public static final String STEP_UPDATE_EMAIL = "updateEmail";
     public static final String STEP_REMOVE_EMAIL = "removeEmail";
+    public static final String STEP_UPDATE_PHONE = "updatePhone";
+    public static final String STEP_REMOVE_PHONE = "removePhone";
 
     // ============================== COMPENSATE METHODS ==============================
     public static final String COMPENSATE_REMOVE_PARTY = "removeParty";
@@ -73,6 +78,8 @@ public class RegisterCustomerConstants {
     public static final String EVENT_ADDRESS_REMOVED = "address.removed";
     public static final String EVENT_EMAIL_UPDATED = "email.updated";
     public static final String EVENT_EMAIL_REMOVED = "email.removed";
+    public static final String EVENT_PHONE_UPDATED = "phone.updated";
+    public static final String EVENT_PHONE_REMOVED = "phone.removed";
 
 
 }

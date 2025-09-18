@@ -88,4 +88,35 @@ public interface RegisterCustomerService {
      */
     Mono<SagaResult> removeEmail(UUID partyId, UUID emailId);
 
+    /**
+     * Adds a new phone to an existing customer.
+     * This operation is orchestrated as a saga to ensure data consistency.
+     *
+     * @param partyId the ID of the party/customer to add the phone to
+     * @param phoneCommand the command containing the phone information
+     * @return a Mono containing the saga execution result
+     */
+    Mono<SagaResult> addPhone(UUID partyId, RegisterPhoneCommand phoneCommand);
+
+    /**
+     * Updates an existing phone for a given customer. The operation modifies
+     * the specified phone fields while maintaining version history to ensure data consistency.
+     *
+     * @param partyId the ID of the customer/party whose phone is being updated
+     * @param phoneId the ID of the phone to be updated
+     * @param phoneData the data of the phone to update, encapsulated in an UpdatePhoneCommand
+     * @return a Mono of Void, completing when the phone update is successful
+     */
+    Mono<Void> updatePhone(UUID partyId, UUID phoneId, UpdatePhoneCommand phoneData);
+
+    /**
+     * Removes a phone for a specified customer. This operation can either remove
+     * the phone entirely or mark it with an end-date, preserving audit and historical data.
+     *
+     * @param partyId the unique identifier of the customer/party owning the phone
+     * @param phoneId the unique identifier of the phone to be removed
+     * @return a Mono containing the saga execution result, indicating success or failure of the operation
+     */
+    Mono<SagaResult> removePhone(UUID partyId, UUID phoneId);
+
 }

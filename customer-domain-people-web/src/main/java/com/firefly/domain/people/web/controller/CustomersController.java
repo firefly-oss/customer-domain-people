@@ -95,4 +95,33 @@ public class CustomersController {
                 .thenReturn(ResponseEntity.ok().build());
     }
 
+    // Phone endpoints
+    @PostMapping("/{partyId}/phones")
+    @Operation(summary = "Add customer phone", description = "Add phone in E.164 with label (mobile/landline).")
+    public Mono<ResponseEntity<Object>> addCustomerPhone(
+            @PathVariable("partyId") UUID partyId,
+            @RequestBody @Valid RegisterPhoneCommand phoneCommand) {
+        return customerService.addPhone(partyId, phoneCommand)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PutMapping("/{partyId}/phones/{phoneId}")
+    @Operation(summary = "Update customer email", description = "Modify phone fields keeping version history.")
+    public Mono<ResponseEntity<Object>> updateCustomerPhone(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("phoneId") UUID phoneId,
+            @RequestBody UpdatePhoneCommand phoneData) {
+        return customerService.updatePhone(partyId, phoneId, phoneData)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @DeleteMapping("/{partyId}/phones/{phoneId}")
+    @Operation(summary = "Remove customer phone", description = "Remove phone from profile.")
+    public Mono<ResponseEntity<Object>> removeCustomerPhone(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("phoneId") UUID phoneId) {
+        return customerService.removePhone(partyId, phoneId)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
 }
