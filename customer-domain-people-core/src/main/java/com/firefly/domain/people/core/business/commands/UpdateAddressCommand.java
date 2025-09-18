@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class RegisterAddressCommand extends AddressDTO implements Command<UUID> {
+public class UpdateAddressCommand extends AddressDTO implements Command<UUID> {
 
     private UUID addressId;
 
@@ -19,8 +19,19 @@ public class RegisterAddressCommand extends AddressDTO implements Command<UUID> 
      * @param partyId the party ID to assign to this address command
      * @return this command instance for method chaining
      */
-    public RegisterAddressCommand withPartyId(UUID partyId) {
+    public UpdateAddressCommand withPartyId(UUID partyId) {
         this.setPartyId(partyId);
+        return this;
+    }
+
+    /**
+     * Sets the address ID for this command and returns the command instance for method chaining.
+     * 
+     * @param addressId the address ID to assign to this address command
+     * @return this command instance for method chaining
+     */
+    public UpdateAddressCommand withAddressId(UUID addressId) {
+        this.setAddressId(addressId);
         return this;
     }
 

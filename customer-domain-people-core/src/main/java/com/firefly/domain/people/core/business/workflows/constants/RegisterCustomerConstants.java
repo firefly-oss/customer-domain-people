@@ -5,6 +5,9 @@ public class RegisterCustomerConstants {
     // ============================== SAGA CONFIGURATION ==============================
     public static final String SAGA_REGISTER_CUSTOMER_NAME = "RegisterCustomerSaga";
     public static final String SAGA_UPDATE_LEGAL_NAME_NAME = "UpdateNameSaga";
+    public static final String SAGA_ADD_ADDRESS_NAME = "AddAddressSaga";
+    public static final String SAGA_UPDATE_ADDRESS_NAME = "UpdateAddressSaga";
+    public static final String SAGA_REMOVE_ADDRESS_NAME = "RemoveAddressSaga";
 
     // ============================== STEP IDENTIFIERS ==============================
     public static final String STEP_REGISTER_PARTY = "registerParty";
@@ -24,6 +27,8 @@ public class RegisterCustomerConstants {
     public static final String STEP_RETRIEVE_PARTY_ID = "retrievePartyId";
     public static final String STEP_RETRIEVE_CUSTOMER = "retrieveCustomer";
     public static final String STEP_UPDATE_CUSTOMER_NAME = "updateCustomerName";
+    public static final String STEP_UPDATE_ADDRESS = "updateAddress";
+    public static final String STEP_REMOVE_ADDRESS = "removeAddress";
 
     // ============================== COMPENSATE METHODS ==============================
     public static final String COMPENSATE_REMOVE_PARTY = "removeParty";
@@ -59,6 +64,8 @@ public class RegisterCustomerConstants {
     public static final String EVENT_PARTY_RETRIEVED = "party.retrieved";
     public static final String EVENT_CUSTOMER_RETRIEVED = "customer.retrieved";
     public static final String EVENT_CUSTOMER_NAME_CHANGED = "customername.changed";
+    public static final String EVENT_ADDRESS_UPDATED = "address.updated";
+    public static final String EVENT_ADDRESS_REMOVED = "address.removed";
 
 
 }

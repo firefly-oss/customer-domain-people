@@ -2,7 +2,8 @@ package com.firefly.domain.people.core.business.workflows;
 
 import com.firefly.common.domain.cqrs.command.CommandBus;
 import com.firefly.common.domain.cqrs.query.QueryBus;
-import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
+import com.firefly.domain.people.core.business.commands.RegisterAddressCommand;
+import com.firefly.domain.people.core.business.commands.UpdateAddressCommand;
 import com.firefly.transactional.annotations.FromStep;
 import com.firefly.transactional.annotations.Saga;
 import com.firefly.transactional.annotations.SagaStep;
@@ -19,32 +20,27 @@ import static com.firefly.domain.people.core.business.workflows.constants.Regist
 
 
 /**
- * Saga orchestrator for customer registration processes.
+ * Saga orchestrator for updating customer address processes.
  * 
- * This orchestrator manages the distributed transaction for registering customers,
- * coordinating multiple steps including party creation, person details registration,
- * contact information setup, and relationship establishment. Each step is designed
+ * This orchestrator manages the distributed transaction for updating customer addresses,
+ * coordinating the address update step. The step is designed
  * to be compensatable to ensure data consistency in case of failures.
- * 
- * The orchestrator handles both natural persons and legal entities, with conditional
- * logic to process only relevant information based on the customer type.
  */
-@Saga(name = SAGA_UPDATE_LEGAL_NAME_NAME)
+@Saga(name = SAGA_UPDATE_ADDRESS_NAME)
 @Service
-public class UpdateCustomerNameSaga {
+public class UpdateAddressSaga {
 
     private final CommandBus commandBus;
 
     @Autowired
-    public UpdateCustomerNameSaga(CommandBus commandBus) {
+    public UpdateAddressSaga(CommandBus commandBus) {
         this.commandBus = commandBus;
     }
 
-    @SagaStep(id = STEP_UPDATE_CUSTOMER_NAME)
-    @StepEvent(type = EVENT_CUSTOMER_NAME_CHANGED)
-    public Mono<UUID> updateName(UpdateCustomerCommand cmd, SagaContext ctx) {
-        return commandBus.send(cmd);
+    @SagaStep(id = STEP_UPDATE_ADDRESS)
+    @StepEvent(type = EVENT_ADDRESS_UPDATED)
+    public Mono<Void> updateAddress(UpdateAddressCommand cmd, SagaContext ctx) {
+        return commandBus.send(cmd).then();
     }
-
 
 }

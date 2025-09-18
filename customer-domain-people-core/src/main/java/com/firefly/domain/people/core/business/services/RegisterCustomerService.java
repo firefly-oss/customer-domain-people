@@ -26,5 +26,35 @@ public interface RegisterCustomerService {
      */
     Mono<SagaResult> updateCustomer(UpdateCustomerCommand command);
 
+    /**
+     * Adds a new address to an existing customer.
+     * This operation is orchestrated as a saga to ensure data consistency.
+     *
+     * @param partyId the ID of the party/customer to add the address to
+     * @param addressCommand the command containing the address information
+     * @return a Mono containing the saga execution result
+     */
+    Mono<SagaResult> addAddress(UUID partyId, RegisterAddressCommand addressCommand);
+
+    /**
+     * Updates an existing address for a given customer. The operation modifies
+     * the specified address fields while maintaining version history to ensure data consistency.
+     *
+     * @param partyId the ID of the customer/party whose address is being updated
+     * @param addressId the ID of the address to be updated
+     * @param addressData the data of the address to update, encapsulated in an UpdateAddressCommand
+     * @return a Mono of Void, completing when the address update is successful
+     */
+    Mono<Void> updateAddress(UUID partyId, UUID addressId, UpdateAddressCommand addressData);
+
+    /**
+     * Removes an address for a specified customer. This operation can either remove
+     * the address entirely or mark it with an end-date, preserving audit and historical data.
+     *
+     * @param partyId the unique identifier of the customer/party owning the address
+     * @param addressId the unique identifier of the address to be removed
+     * @return a Mono containing the saga execution result, indicating success or failure of the operation
+     */
+    Mono<SagaResult> removeAddress(UUID partyId, UUID addressId);
 
 }

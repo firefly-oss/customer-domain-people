@@ -37,4 +37,33 @@ public class CustomersController {
                 .thenReturn(ResponseEntity.ok().build());
     }
 
+    // Address endpoints
+    @PostMapping("/{partyId}/addresses")
+    @Operation(summary = "Add customer address", description = "Add an address with validity period; prevent primary overlaps.")
+    public Mono<ResponseEntity<Object>> addCustomerAddress(
+            @PathVariable("partyId") UUID partyId,
+            @RequestBody RegisterAddressCommand addressCommand) {
+        return customerService.addAddress(partyId, addressCommand)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PutMapping("/{partyId}/addresses/{addressId}")
+    @Operation(summary = "Update customer address", description = "Modify address fields keeping version history.")
+    public Mono<ResponseEntity<Object>> updateCustomerAddress(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("addressId") UUID addressId,
+            @RequestBody UpdateAddressCommand addressData) {
+        return customerService.updateAddress(partyId, addressId, addressData)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @DeleteMapping("/{partyId}/addresses/{addressId}")
+    @Operation(summary = "Remove customer address", description = "Remove or end-date an address; preserve audit.")
+    public Mono<ResponseEntity<Object>> removeCustomerAddress(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("addressId") UUID addressId) {
+        return customerService.removeAddress(partyId, addressId)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
 }

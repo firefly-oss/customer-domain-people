@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @CommandHandlerComponent
-public class RegisterPartyHandler extends ContextAwareCommandHandler<RegisterPartyCommand, UUID> {
+public class RegisterPartyHandler extends CommandHandler<RegisterPartyCommand, UUID> {
 
     private final PartiesApi partiesApi;
 
@@ -21,7 +21,7 @@ public class RegisterPartyHandler extends ContextAwareCommandHandler<RegisterPar
     }
 
     @Override
-    protected Mono<UUID> doHandle(RegisterPartyCommand cmd, ExecutionContext context) {
+    protected Mono<UUID> doHandle(RegisterPartyCommand cmd) {
 
         return partiesApi
                 .createParty(cmd, UUID.randomUUID().toString())

@@ -3,7 +3,10 @@ package com.firefly.domain.people.core.business.services.impl;
 import com.firefly.domain.people.core.business.commands.*;
 import com.firefly.domain.people.core.business.commands.UpdateCustomerCommand;
 import com.firefly.domain.people.core.business.services.RegisterCustomerService;
+import com.firefly.domain.people.core.business.workflows.AddAddressSaga;
 import com.firefly.domain.people.core.business.workflows.RegisterCustomerSaga;
+import com.firefly.domain.people.core.business.workflows.RemoveAddressSaga;
+import com.firefly.domain.people.core.business.workflows.UpdateAddressSaga;
 import com.firefly.domain.people.core.business.workflows.UpdateCustomerNameSaga;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.ExpandEach;
@@ -55,6 +58,34 @@ public class RegisterCustomerServiceImpl implements RegisterCustomerService {
 
         return engine.execute(UpdateCustomerNameSaga.class, inputs);
 
+    }
+
+    @Override
+    public Mono<SagaResult> addAddress(UUID partyId, RegisterAddressCommand addressCommand) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(AddAddressSaga::registerAddress, addressCommand.withPartyId(partyId))
+                .build();
+
+        return engine.execute(AddAddressSaga.class, inputs);
+    }
+
+    @Override
+    public Mono<Void> updateAddress(UUID partyId, UUID addressId, UpdateAddressCommand addressData) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(UpdateAddressSaga::updateAddress, addressData.withAddressId(addressId).withPartyId(partyId))
+                .build();
+
+        return engine.execute(UpdateAddressSaga.class, inputs)
+                .then();
+    }
+
+    @Override
+    public Mono<SagaResult> removeAddress(UUID partyId, UUID addressId) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(RemoveAddressSaga::removeAddress, new RemoveAddressCommand(partyId, addressId))
+                .build();
+
+        return engine.execute(RemoveAddressSaga.class, inputs);
     }
 
 }
