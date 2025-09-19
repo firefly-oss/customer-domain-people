@@ -1,15 +1,7 @@
-package com.firefly.domain.people.core.business.services.impl;
+package com.firefly.domain.people.core.contact.services.impl;
 
-import com.firefly.domain.people.core.business.commands.*;
 import com.firefly.domain.people.core.contact.commands.*;
 import com.firefly.domain.people.core.contact.workflows.*;
-import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
-import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
-import com.firefly.domain.people.core.customer.services.impl.RegisterCustomerServiceImpl;
-import com.firefly.domain.people.core.customer.workflows.RegisterCustomerSaga;
-import com.firefly.domain.people.core.customer.workflows.UpdateCustomerNameSaga;
-import com.firefly.domain.people.core.status.commands.UpdateStatusCommand;
-import com.firefly.domain.people.core.status.workflows.UpdateStatusSaga;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.SagaEngine;
 import com.firefly.transactional.engine.StepInputs;
@@ -30,8 +22,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("RegisterCustomerServiceImpl Tests")
-class RegisterCustomerServiceImplTest {
+@DisplayName("ContactServiceImpl Tests")
+class ContactServiceImplTest {
 
     @Mock
     private SagaEngine sagaEngine;
@@ -39,49 +31,11 @@ class RegisterCustomerServiceImplTest {
     @Mock
     private SagaResult sagaResult;
 
-    private RegisterCustomerServiceImpl service;
+    private ContactServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new RegisterCustomerServiceImpl(sagaEngine);
-    }
-
-    @Test
-    @DisplayName("Should register customer successfully")
-    void testRegisterCustomer_ShouldExecuteSaga() {
-        // Given
-        RegisterCustomerCommand command = mock(RegisterCustomerCommand.class);
-        when(sagaEngine.execute(eq(RegisterCustomerSaga.class), any(StepInputs.class)))
-                .thenReturn(Mono.just(sagaResult));
-
-        // When
-        Mono<SagaResult> result = service.registerCustomer(command);
-
-        // Then
-        StepVerifier.create(result)
-                .expectNext(sagaResult)
-                .verifyComplete();
-
-        verify(sagaEngine).execute(eq(RegisterCustomerSaga.class), any(StepInputs.class));
-    }
-
-    @Test
-    @DisplayName("Should update customer successfully")
-    void testUpdateCustomer_ShouldExecuteSaga() {
-        // Given
-        UpdateCustomerCommand command = mock(UpdateCustomerCommand.class);
-        when(sagaEngine.execute(eq(UpdateCustomerNameSaga.class), any(StepInputs.class)))
-                .thenReturn(Mono.just(sagaResult));
-
-        // When
-        Mono<SagaResult> result = service.updateCustomer(command);
-
-        // Then
-        StepVerifier.create(result)
-                .expectNext(sagaResult)
-                .verifyComplete();
-
-        verify(sagaEngine).execute(eq(UpdateCustomerNameSaga.class), any(StepInputs.class));
+        service = new ContactServiceImpl(sagaEngine);
     }
 
     @Test
@@ -304,58 +258,85 @@ class RegisterCustomerServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should update status successfully")
-    void testUpdateStatus_ShouldExecuteSaga() {
+    @DisplayName("Should add identity document successfully")
+    void testAddIdentityDocument_ShouldExecuteSaga() {
         // Given
-        UpdateStatusCommand command = mock(UpdateStatusCommand.class);
-        when(sagaEngine.execute(eq(UpdateStatusSaga.class), any(StepInputs.class)))
+        UUID partyId = UUID.randomUUID();
+        RegisterIdentityDocumentCommand command = mock(RegisterIdentityDocumentCommand.class);
+        when(command.withPartyId(partyId)).thenReturn(command);
+        when(sagaEngine.execute(eq(AddIdentityDocumentSaga.class), any(StepInputs.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
-        Mono<SagaResult> result = service.updateStatus(command);
+        Mono<SagaResult> result = service.addIdentityDocument(partyId, command);
 
         // Then
         StepVerifier.create(result)
                 .expectNext(sagaResult)
                 .verifyComplete();
 
-        verify(sagaEngine).execute(eq(UpdateStatusSaga.class), any(StepInputs.class));
+        verify(command).withPartyId(partyId);
+        verify(sagaEngine).execute(eq(AddIdentityDocumentSaga.class), any(StepInputs.class));
+    }
+
+    @Test
+    @DisplayName("Should remove identity document successfully")
+    void testRemoveIdentityDocument_ShouldExecuteSaga() {
+        // Given
+        UUID partyId = UUID.randomUUID();
+        UUID identityDocumentId = UUID.randomUUID();
+        when(sagaEngine.execute(eq(RemoveIdentityDocumentSaga.class), any(StepInputs.class)))
+                .thenReturn(Mono.just(sagaResult));
+
+        // When
+        Mono<SagaResult> result = service.removeIdentityDocument(partyId, identityDocumentId);
+
+        // Then
+        StepVerifier.create(result)
+                .expectNext(sagaResult)
+                .verifyComplete();
+
+        verify(sagaEngine).execute(eq(RemoveIdentityDocumentSaga.class), any(StepInputs.class));
     }
 
     @Test
     @DisplayName("Should handle saga execution errors")
-    void testRegisterCustomer_ShouldHandleErrors() {
+    void testAddAddress_ShouldHandleErrors() {
         // Given
-        RegisterCustomerCommand command = mock(RegisterCustomerCommand.class);
+        UUID partyId = UUID.randomUUID();
+        RegisterAddressCommand command = mock(RegisterAddressCommand.class);
+        when(command.withPartyId(partyId)).thenReturn(command);
         RuntimeException error = new RuntimeException("Saga execution failed");
-        when(sagaEngine.execute(eq(RegisterCustomerSaga.class), any(StepInputs.class)))
+        when(sagaEngine.execute(eq(AddAddressSaga.class), any(StepInputs.class)))
                 .thenReturn(Mono.error(error));
 
         // When
-        Mono<SagaResult> result = service.registerCustomer(command);
+        Mono<SagaResult> result = service.addAddress(partyId, command);
 
         // Then
         StepVerifier.create(result)
                 .expectError(RuntimeException.class)
                 .verify();
 
-        verify(sagaEngine).execute(eq(RegisterCustomerSaga.class), any(StepInputs.class));
+        verify(sagaEngine).execute(eq(AddAddressSaga.class), any(StepInputs.class));
     }
 
     @Test
     @DisplayName("Constructor should set saga engine dependency")
     void testConstructor_ShouldSetSagaEngine() {
         // When
-        RegisterCustomerServiceImpl newService = new RegisterCustomerServiceImpl(sagaEngine);
+        ContactServiceImpl newService = new ContactServiceImpl(sagaEngine);
 
         // Then
         assertNotNull(newService);
         // We can't directly access the private field, but we can verify it works by calling a method
-        RegisterCustomerCommand command = mock(RegisterCustomerCommand.class);
-        when(sagaEngine.execute(eq(RegisterCustomerSaga.class), any(StepInputs.class)))
+        UUID partyId = UUID.randomUUID();
+        RegisterAddressCommand command = mock(RegisterAddressCommand.class);
+        when(command.withPartyId(partyId)).thenReturn(command);
+        when(sagaEngine.execute(eq(AddAddressSaga.class), any(StepInputs.class)))
                 .thenReturn(Mono.just(sagaResult));
 
-        Mono<SagaResult> result = newService.registerCustomer(command);
+        Mono<SagaResult> result = newService.addAddress(partyId, command);
 
         StepVerifier.create(result)
                 .expectNext(sagaResult)

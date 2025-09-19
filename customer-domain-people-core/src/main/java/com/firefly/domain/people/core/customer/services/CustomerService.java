@@ -5,7 +5,7 @@ import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
 import com.firefly.transactional.core.SagaResult;
 import reactor.core.publisher.Mono;
 
-public interface RegisterCustomerService {
+public interface CustomerService {
     /**
      * Registers a new customer using the provided registration command.
      * This operation is orchestrated as a saga to ensure data consistency across multiple steps.

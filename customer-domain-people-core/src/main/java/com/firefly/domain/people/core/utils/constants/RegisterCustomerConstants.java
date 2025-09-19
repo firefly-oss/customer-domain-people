@@ -15,6 +15,8 @@ public class RegisterCustomerConstants {
     public static final String SAGA_UPDATE_PHONE_NAME = "UpdatePhoneSaga";
     public static final String SAGA_REMOVE_PHONE_NAME = "RemovePhoneSaga";
     public static final String SAGA_SET_PREFERRED_CHANNEL_NAME = "SetPreferredChannelSaga";
+    public static final String SAGA_ADD_IDENTITY_DOCUMENT_NAME = "AddIdentityDocumentSaga";
+    public static final String SAGA_REMOVE_IDENTITY_DOCUMENT_NAME = "RemoveIdentityDocumentSaga";
 
     // ============================== STEP IDENTIFIERS ==============================
     public static final String STEP_REGISTER_PARTY = "registerParty";
@@ -42,6 +44,7 @@ public class RegisterCustomerConstants {
     public static final String STEP_REMOVE_PHONE = "removePhone";
     public static final String STEP_UPDATE_CHANNEL = "updateChannel";
     public static final String STEP_UPDATE_STATUS = "updateStatus";
+    public static final String STEP_REMOVE_IDENTITY_DOCUMENT = "removeIdentityDocument";
 
     // ============================== COMPENSATE METHODS ==============================
     public static final String COMPENSATE_REMOVE_PARTY = "removeParty";
@@ -85,6 +88,7 @@ public class RegisterCustomerConstants {
     public static final String EVENT_PHONE_REMOVED = "phone.removed";
     public static final String EVENT_PREFERRED_CHANNEL_UPDATED = "preferredChannel.updated";
     public static final String EVENT_STATUS_UPDATED = "status.updated";
+    public static final String EVENT_IDENTITY_DOCUMENT_REMOVED = "identitydocument.removed";
 
 
 }

@@ -2,9 +2,11 @@ package com.firefly.domain.people.core.contact.services.impl;
 
 import com.firefly.domain.people.core.contact.commands.RegisterAddressCommand;
 import com.firefly.domain.people.core.contact.commands.RegisterEmailCommand;
+import com.firefly.domain.people.core.contact.commands.RegisterIdentityDocumentCommand;
 import com.firefly.domain.people.core.contact.commands.RegisterPhoneCommand;
 import com.firefly.domain.people.core.contact.commands.RemoveAddressCommand;
 import com.firefly.domain.people.core.contact.commands.RemoveEmailCommand;
+import com.firefly.domain.people.core.contact.commands.RemoveIdentityDocumentCommand;
 import com.firefly.domain.people.core.contact.commands.RemovePhoneCommand;
 import com.firefly.domain.people.core.contact.commands.UpdateAddressCommand;
 import com.firefly.domain.people.core.contact.commands.UpdateEmailCommand;
@@ -13,9 +15,11 @@ import com.firefly.domain.people.core.contact.commands.UpdatePreferredChannelCom
 import com.firefly.domain.people.core.contact.services.ContactService;
 import com.firefly.domain.people.core.contact.workflows.AddAddressSaga;
 import com.firefly.domain.people.core.contact.workflows.AddEmailSaga;
+import com.firefly.domain.people.core.contact.workflows.AddIdentityDocumentSaga;
 import com.firefly.domain.people.core.contact.workflows.AddPhoneSaga;
 import com.firefly.domain.people.core.contact.workflows.RemoveAddressSaga;
 import com.firefly.domain.people.core.contact.workflows.RemoveEmailSaga;
+import com.firefly.domain.people.core.contact.workflows.RemoveIdentityDocumentSaga;
 import com.firefly.domain.people.core.contact.workflows.RemovePhoneSaga;
 import com.firefly.domain.people.core.contact.workflows.SetPreferredChannelSaga;
 import com.firefly.domain.people.core.contact.workflows.UpdateAddressSaga;
@@ -132,5 +136,23 @@ public class ContactServiceImpl implements ContactService {
 
         return engine.execute(SetPreferredChannelSaga.class, inputs)
                 .then();
+    }
+
+    @Override
+    public Mono<SagaResult> addIdentityDocument(UUID partyId, RegisterIdentityDocumentCommand identityDocumentCommand) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(AddIdentityDocumentSaga::registerIdentityDocument, identityDocumentCommand.withPartyId(partyId))
+                .build();
+
+        return engine.execute(AddIdentityDocumentSaga.class, inputs);
+    }
+
+    @Override
+    public Mono<SagaResult> removeIdentityDocument(UUID partyId, UUID identityDocumentId) {
+        StepInputs inputs = StepInputs.builder()
+                .forStep(RemoveIdentityDocumentSaga::removeIdentityDocument, new RemoveIdentityDocumentCommand(partyId, identityDocumentId))
+                .build();
+
+        return engine.execute(RemoveIdentityDocumentSaga.class, inputs);
     }
 }

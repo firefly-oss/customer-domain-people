@@ -2,6 +2,7 @@ package com.firefly.domain.people.core.contact.services;
 
 import com.firefly.domain.people.core.contact.commands.RegisterAddressCommand;
 import com.firefly.domain.people.core.contact.commands.RegisterEmailCommand;
+import com.firefly.domain.people.core.contact.commands.RegisterIdentityDocumentCommand;
 import com.firefly.domain.people.core.contact.commands.RegisterPhoneCommand;
 import com.firefly.domain.people.core.contact.commands.UpdateAddressCommand;
 import com.firefly.domain.people.core.contact.commands.UpdateEmailCommand;
@@ -116,4 +117,24 @@ public interface ContactService {
      * @return a Mono of Void, completing when the preferred channel update is successful
      */
     Mono<Void> setPreferredChannel(UUID partyId, UpdatePreferredChannelCommand channelData);
+
+    /**
+     * Adds a new identity document to an existing customer.
+     * This operation is orchestrated as a saga to ensure data consistency.
+     *
+     * @param partyId the ID of the party/customer to add the identity document to
+     * @param identityDocumentCommand the command containing the identity document information
+     * @return a Mono containing the saga execution result
+     */
+    Mono<SagaResult> addIdentityDocument(UUID partyId, RegisterIdentityDocumentCommand identityDocumentCommand);
+
+    /**
+     * Removes an identity document for a specified customer. This operation can either remove
+     * the identity document entirely or mark it with an end-date, preserving audit and historical data.
+     *
+     * @param partyId the unique identifier of the customer/party owning the identity document
+     * @param identityDocumentId the unique identifier of the identity document to be removed
+     * @return a Mono containing the saga execution result, indicating success or failure of the operation
+     */
+    Mono<SagaResult> removeIdentityDocument(UUID partyId, UUID identityDocumentId);
 }

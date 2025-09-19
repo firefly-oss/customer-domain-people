@@ -5,7 +5,7 @@ import com.firefly.domain.people.core.contact.commands.*;
 import com.firefly.domain.people.core.contact.services.ContactService;
 import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
 import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
-import com.firefly.domain.people.core.customer.services.RegisterCustomerService;
+import com.firefly.domain.people.core.customer.services.CustomerService;
 import com.firefly.domain.people.core.status.commands.UpdateStatusCommand;
 import com.firefly.domain.people.core.status.services.StatusService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ import java.util.UUID;
 @Tag(name = "Customers", description = "CQ queries and registration for customers")
 public class CustomersController {
 
-    private final RegisterCustomerService customerService;
+    private final CustomerService customerService;
     private final ContactService contactService;
     private final StatusService statusService;
 

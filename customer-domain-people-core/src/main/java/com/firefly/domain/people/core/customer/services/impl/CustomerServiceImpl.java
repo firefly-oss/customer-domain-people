@@ -2,7 +2,7 @@ package com.firefly.domain.people.core.customer.services.impl;
 
 import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
 import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
-import com.firefly.domain.people.core.customer.services.RegisterCustomerService;
+import com.firefly.domain.people.core.customer.services.CustomerService;
 import com.firefly.domain.people.core.customer.workflows.RegisterCustomerSaga;
 import com.firefly.domain.people.core.customer.workflows.UpdateCustomerNameSaga;
 import com.firefly.transactional.core.SagaResult;
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-public class RegisterCustomerServiceImpl implements RegisterCustomerService {
+public class CustomerServiceImpl implements CustomerService {
 
     private final SagaEngine engine;
 
     @Autowired
-    public RegisterCustomerServiceImpl(SagaEngine engine) {
+    public CustomerServiceImpl(SagaEngine engine) {
         this.engine = engine;
     }
 

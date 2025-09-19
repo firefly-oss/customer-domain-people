@@ -4,7 +4,7 @@ import com.firefly.domain.people.core.contact.commands.*;
 import com.firefly.domain.people.core.contact.services.ContactService;
 import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
 import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
-import com.firefly.domain.people.core.customer.services.RegisterCustomerService;
+import com.firefly.domain.people.core.customer.services.CustomerService;
 import com.firefly.domain.people.core.status.commands.UpdateStatusCommand;
 import com.firefly.domain.people.core.status.services.StatusService;
 import com.firefly.transactional.core.SagaResult;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 class CustomersControllerTest {
 
     @Mock
-    private RegisterCustomerService registerCustomerService;
+    private CustomerService customerService;
 
     @Mock
     private ContactService contactService;
@@ -44,7 +44,7 @@ class CustomersControllerTest {
 
     @BeforeEach
     void setUp() {
-        controller = new CustomersController(registerCustomerService, contactService, statusService);
+        controller = new CustomersController(customerService, contactService, statusService);
     }
 
     @Test
@@ -52,7 +52,7 @@ class CustomersControllerTest {
     void testRegisterCustomer_ShouldReturnNoContentResponse() {
         // Given
         RegisterCustomerCommand command = mock(RegisterCustomerCommand.class);
-        when(registerCustomerService.registerCustomer(command))
+        when(customerService.registerCustomer(command))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -63,7 +63,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(204, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).registerCustomer(command);
+        verify(customerService).registerCustomer(command);
     }
 
     @Test
@@ -72,7 +72,7 @@ class CustomersControllerTest {
         // Given
         RegisterCustomerCommand command = mock(RegisterCustomerCommand.class);
         RuntimeException error = new RuntimeException("Service error");
-        when(registerCustomerService.registerCustomer(command))
+        when(customerService.registerCustomer(command))
                 .thenReturn(Mono.error(error));
 
         // When
@@ -83,7 +83,7 @@ class CustomersControllerTest {
                 .expectError(RuntimeException.class)
                 .verify();
 
-        verify(registerCustomerService).registerCustomer(command);
+        verify(customerService).registerCustomer(command);
     }
 
     @Test
@@ -91,7 +91,7 @@ class CustomersControllerTest {
     void testUpdateCustomer_ShouldReturnOkResponse() {
         // Given
         UpdateCustomerCommand command = mock(UpdateCustomerCommand.class);
-        when(registerCustomerService.updateCustomer(command))
+        when(customerService.updateCustomer(command))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -102,7 +102,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateCustomer(command);
+        verify(customerService).updateCustomer(command);
     }
 
     @Test
@@ -445,13 +445,13 @@ class CustomersControllerTest {
     @DisplayName("Constructor should set service dependencies")
     void testConstructor_ShouldSetService() {
         // When
-        CustomersController newController = new CustomersController(registerCustomerService, contactService, statusService);
+        CustomersController newController = new CustomersController(customerService, contactService, statusService);
 
         // Then
         assertNotNull(newController);
         // Verify it works by calling a method
         UpdateCustomerCommand command = mock(UpdateCustomerCommand.class);
-        when(registerCustomerService.updateCustomer(command))
+        when(customerService.updateCustomer(command))
                 .thenReturn(Mono.just(sagaResult));
 
         Mono<ResponseEntity<Object>> result = newController.updateCustomer(command);
