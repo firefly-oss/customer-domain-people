@@ -1,7 +1,12 @@
 package com.firefly.domain.people.web.controller;
 
-import com.firefly.domain.people.core.business.commands.*;
-import com.firefly.domain.people.core.business.services.RegisterCustomerService;
+import com.firefly.domain.people.core.contact.commands.*;
+import com.firefly.domain.people.core.contact.services.ContactService;
+import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
+import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
+import com.firefly.domain.people.core.customer.services.RegisterCustomerService;
+import com.firefly.domain.people.core.status.commands.UpdateStatusCommand;
+import com.firefly.domain.people.core.status.services.StatusService;
 import com.firefly.transactional.core.SagaResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,13 +32,19 @@ class CustomersControllerTest {
     private RegisterCustomerService registerCustomerService;
 
     @Mock
+    private ContactService contactService;
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
     private SagaResult sagaResult;
 
     private CustomersController controller;
 
     @BeforeEach
     void setUp() {
-        controller = new CustomersController(registerCustomerService);
+        controller = new CustomersController(registerCustomerService, contactService, statusService);
     }
 
     @Test
@@ -100,7 +111,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         RegisterAddressCommand command = mock(RegisterAddressCommand.class);
-        when(registerCustomerService.addAddress(partyId, command))
+        when(contactService.addAddress(partyId, command))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -111,7 +122,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).addAddress(partyId, command);
+        verify(contactService).addAddress(partyId, command);
     }
 
     @Test
@@ -121,7 +132,7 @@ class CustomersControllerTest {
         UUID partyId = UUID.randomUUID();
         UUID addressId = UUID.randomUUID();
         UpdateAddressCommand command = mock(UpdateAddressCommand.class);
-        when(registerCustomerService.updateAddress(partyId, addressId, command))
+        when(contactService.updateAddress(partyId, addressId, command))
                 .thenReturn(Mono.empty());
 
         // When
@@ -132,7 +143,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateAddress(partyId, addressId, command);
+        verify(contactService).updateAddress(partyId, addressId, command);
     }
 
     @Test
@@ -141,7 +152,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         UUID addressId = UUID.randomUUID();
-        when(registerCustomerService.removeAddress(partyId, addressId))
+        when(contactService.removeAddress(partyId, addressId))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -152,7 +163,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).removeAddress(partyId, addressId);
+        verify(contactService).removeAddress(partyId, addressId);
     }
 
     @Test
@@ -161,7 +172,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         RegisterEmailCommand command = mock(RegisterEmailCommand.class);
-        when(registerCustomerService.addEmail(partyId, command))
+        when(contactService.addEmail(partyId, command))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -172,7 +183,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).addEmail(partyId, command);
+        verify(contactService).addEmail(partyId, command);
     }
 
     @Test
@@ -182,7 +193,7 @@ class CustomersControllerTest {
         UUID partyId = UUID.randomUUID();
         UUID emailId = UUID.randomUUID();
         UpdateEmailCommand command = mock(UpdateEmailCommand.class);
-        when(registerCustomerService.updateEmail(partyId, emailId, command))
+        when(contactService.updateEmail(partyId, emailId, command))
                 .thenReturn(Mono.empty());
 
         // When
@@ -193,7 +204,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateEmail(partyId, emailId, command);
+        verify(contactService).updateEmail(partyId, emailId, command);
     }
 
     @Test
@@ -202,7 +213,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         UUID emailId = UUID.randomUUID();
-        when(registerCustomerService.removeEmail(partyId, emailId))
+        when(contactService.removeEmail(partyId, emailId))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -213,7 +224,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).removeEmail(partyId, emailId);
+        verify(contactService).removeEmail(partyId, emailId);
     }
 
     @Test
@@ -222,7 +233,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         RegisterPhoneCommand command = mock(RegisterPhoneCommand.class);
-        when(registerCustomerService.addPhone(partyId, command))
+        when(contactService.addPhone(partyId, command))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -233,7 +244,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).addPhone(partyId, command);
+        verify(contactService).addPhone(partyId, command);
     }
 
     @Test
@@ -243,7 +254,7 @@ class CustomersControllerTest {
         UUID partyId = UUID.randomUUID();
         UUID phoneId = UUID.randomUUID();
         UpdatePhoneCommand command = mock(UpdatePhoneCommand.class);
-        when(registerCustomerService.updatePhone(partyId, phoneId, command))
+        when(contactService.updatePhone(partyId, phoneId, command))
                 .thenReturn(Mono.empty());
 
         // When
@@ -254,7 +265,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updatePhone(partyId, phoneId, command);
+        verify(contactService).updatePhone(partyId, phoneId, command);
     }
 
     @Test
@@ -263,7 +274,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         UUID phoneId = UUID.randomUUID();
-        when(registerCustomerService.removePhone(partyId, phoneId))
+        when(contactService.removePhone(partyId, phoneId))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -274,7 +285,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).removePhone(partyId, phoneId);
+        verify(contactService).removePhone(partyId, phoneId);
     }
 
     @Test
@@ -283,7 +294,7 @@ class CustomersControllerTest {
         // Given
         UUID partyId = UUID.randomUUID();
         UpdatePreferredChannelCommand command = mock(UpdatePreferredChannelCommand.class);
-        when(registerCustomerService.setPreferredChannel(partyId, command))
+        when(contactService.setPreferredChannel(partyId, command))
                 .thenReturn(Mono.empty());
 
         // When
@@ -294,7 +305,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).setPreferredChannel(partyId, command);
+        verify(contactService).setPreferredChannel(partyId, command);
     }
 
     @Test
@@ -302,7 +313,7 @@ class CustomersControllerTest {
     void testMarkCustomerDormant_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -313,7 +324,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
@@ -321,7 +332,7 @@ class CustomersControllerTest {
     void testReactivateCustomer_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -332,7 +343,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
@@ -340,7 +351,7 @@ class CustomersControllerTest {
     void testMarkCustomerDeceased_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -351,7 +362,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
@@ -359,7 +370,7 @@ class CustomersControllerTest {
     void testRequestCustomerClosure_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -370,7 +381,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
@@ -378,7 +389,7 @@ class CustomersControllerTest {
     void testConfirmCustomerClosure_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -389,7 +400,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
@@ -397,7 +408,7 @@ class CustomersControllerTest {
     void testLockCustomerProfile_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -408,7 +419,7 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
@@ -416,7 +427,7 @@ class CustomersControllerTest {
     void testUnlockCustomerProfile_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
-        when(registerCustomerService.updateStatus(any(UpdateStatusCommand.class)))
+        when(statusService.updateStatus(any(UpdateStatusCommand.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -427,14 +438,14 @@ class CustomersControllerTest {
                 .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
                 .verifyComplete();
 
-        verify(registerCustomerService).updateStatus(any(UpdateStatusCommand.class));
+        verify(statusService).updateStatus(any(UpdateStatusCommand.class));
     }
 
     @Test
-    @DisplayName("Constructor should set service dependency")
+    @DisplayName("Constructor should set service dependencies")
     void testConstructor_ShouldSetService() {
         // When
-        CustomersController newController = new CustomersController(registerCustomerService);
+        CustomersController newController = new CustomersController(registerCustomerService, contactService, statusService);
 
         // Then
         assertNotNull(newController);

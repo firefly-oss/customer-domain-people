@@ -1,7 +1,15 @@
 package com.firefly.domain.people.core.business.services.impl;
 
 import com.firefly.domain.people.core.business.commands.*;
-import com.firefly.domain.people.core.business.workflows.*;
+import com.firefly.domain.people.core.contact.commands.*;
+import com.firefly.domain.people.core.contact.workflows.*;
+import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
+import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
+import com.firefly.domain.people.core.customer.services.impl.RegisterCustomerServiceImpl;
+import com.firefly.domain.people.core.customer.workflows.RegisterCustomerSaga;
+import com.firefly.domain.people.core.customer.workflows.UpdateCustomerNameSaga;
+import com.firefly.domain.people.core.status.commands.UpdateStatusCommand;
+import com.firefly.domain.people.core.status.workflows.UpdateStatusSaga;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.SagaEngine;
 import com.firefly.transactional.engine.StepInputs;

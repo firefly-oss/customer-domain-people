@@ -1,5 +1,6 @@
 package com.firefly.domain.people.core.business.commands;
 
+import com.firefly.domain.people.core.contact.commands.RegisterAddressCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
