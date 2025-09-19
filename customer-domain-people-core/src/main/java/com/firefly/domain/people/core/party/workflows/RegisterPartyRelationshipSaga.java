@@ -1,7 +1,15 @@
-package com.firefly.domain.people.core.customer.workflows;
+package com.firefly.domain.people.core.party.workflows;
 
 import com.firefly.common.domain.cqrs.command.CommandBus;
-import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
+import com.firefly.domain.people.core.business.commands.RegisterLegalEntityCommand;
+import com.firefly.domain.people.core.business.commands.RemoveLegalEntityCommand;
+import com.firefly.domain.people.core.compliance.commands.*;
+import com.firefly.domain.people.core.contact.commands.*;
+import com.firefly.domain.people.core.customer.commands.RegisterNaturalPersonCommand;
+import com.firefly.domain.people.core.customer.commands.RemoveNaturalPersonCommand;
+import com.firefly.domain.people.core.party.commands.*;
+import com.firefly.domain.people.core.status.commands.RegisterPartyStatusEntryCommand;
+import com.firefly.domain.people.core.status.commands.RemovePartyStatusEntryCommand;
 import com.firefly.transactional.annotations.Saga;
 import com.firefly.transactional.annotations.SagaStep;
 import com.firefly.transactional.annotations.StepEvent;
@@ -12,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+import static com.firefly.domain.people.core.utils.constants.GlobalConstants.CTX_PARTY_ID;
 import static com.firefly.domain.people.core.utils.constants.RegisterCustomerConstants.*;
 
 
@@ -26,22 +35,20 @@ import static com.firefly.domain.people.core.utils.constants.RegisterCustomerCon
  * The orchestrator handles both natural persons and legal entities, with conditional
  * logic to process only relevant information based on the customer type.
  */
-@Saga(name = SAGA_UPDATE_LEGAL_NAME_NAME)
+@Saga(name = SAGA_REGISTER_PARTY_RELATIONSHIP)
 @Service
-public class UpdateCustomerNameSaga {
+public class RegisterPartyRelationshipSaga {
 
     private final CommandBus commandBus;
 
     @Autowired
-    public UpdateCustomerNameSaga(CommandBus commandBus) {
+    public RegisterPartyRelationshipSaga(CommandBus commandBus) {
         this.commandBus = commandBus;
     }
 
-    @SagaStep(id = STEP_UPDATE_CUSTOMER_NAME)
-    @StepEvent(type = EVENT_CUSTOMER_NAME_CHANGED)
-    public Mono<UUID> updateName(UpdateCustomerCommand cmd, SagaContext ctx) {
+    @SagaStep(id = STEP_REGISTER_PARTY_RELATIONSHIP)
+    @StepEvent(type = EVENT_PARTY_RELATIONSHIP_REGISTERED)
+    public Mono<UUID> registerPartyRelationship(RegisterPartyRelationshipCommand cmd, SagaContext ctx) {
         return commandBus.send(cmd);
     }
-
-
 }

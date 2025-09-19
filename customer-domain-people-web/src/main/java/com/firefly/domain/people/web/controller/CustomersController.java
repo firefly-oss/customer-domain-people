@@ -37,7 +37,7 @@ public class CustomersController {
     }
 
     @PutMapping
-    @Operation(summary = "Update customer", description = "Updates the name of an existing customer")
+    @Operation(summary = "Update customer", description = "Updates an existing customer")
     public Mono<ResponseEntity<Object>> updateCustomer(
             @Valid @RequestBody UpdateCustomerCommand command) {
         return customerService.updateCustomer(command)
@@ -128,6 +128,25 @@ public class CustomersController {
             @PathVariable("partyId") UUID partyId,
             @PathVariable("phoneId") UUID phoneId) {
         return contactService.removePhone(partyId, phoneId)
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
+    // Tax id endpoints
+    @PostMapping("/{partyId}/id-documents")
+    @Operation(summary = "Add tax id", description = "Add secondary tax ID; validate format/uniqueness")
+    public Mono<ResponseEntity<Object>> addTaxId(
+            @PathVariable("partyId") UUID partyId,
+            @Valid @RequestBody RegisterIdentityDocumentCommand command) {
+        return contactService.addIdentityDocument(partyId, command)
+                .thenReturn(ResponseEntity.noContent().build());
+    }
+
+    @DeleteMapping("/{partyId}/id-documents/{taxId}")
+    @Operation(summary = "Remove tax id", description = "Remove a tax ID from the profile")
+    public Mono<ResponseEntity<Object>> removeTaxId(
+            @PathVariable("partyId") UUID partyId,
+            @PathVariable("taxId") UUID taxId) {
+        return contactService.removeIdentityDocument(partyId, taxId)
                 .thenReturn(ResponseEntity.ok().build());
     }
 

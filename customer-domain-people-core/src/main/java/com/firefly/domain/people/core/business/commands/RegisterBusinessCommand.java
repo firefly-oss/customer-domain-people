@@ -16,7 +16,7 @@ import java.util.List;
 
 public record RegisterBusinessCommand(
         RegisterPartyCommand party,
-        RegisterLegalEntityCommand naturalPerson,
+        RegisterLegalEntityCommand legalEntity,
         List<RegisterPartyStatusEntryCommand> statusHistory,
         List<RegisterIdentityDocumentCommand> identityDocuments,
         List<RegisterAddressCommand> addresses,

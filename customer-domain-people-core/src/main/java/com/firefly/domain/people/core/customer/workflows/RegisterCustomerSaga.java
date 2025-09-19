@@ -1,4 +1,6 @@
 package com.firefly.domain.people.core.customer.workflows;
+import com.firefly.domain.people.core.business.commands.RegisterLegalEntityCommand;
+import com.firefly.domain.people.core.business.commands.RemoveLegalEntityCommand;
 import com.firefly.domain.people.core.compliance.commands.RemoveConsentCommand;
 import com.firefly.domain.people.core.compliance.commands.RemovePepCommand;
 import com.firefly.domain.people.core.contact.commands.*;
@@ -72,11 +74,29 @@ public class RegisterCustomerSaga {
     @SagaStep(id = STEP_REGISTER_NATURAL_PERSON, compensate = COMPENSATE_REMOVE_NATURAL_PERSON, dependsOn = STEP_REGISTER_PARTY)
     @StepEvent(type = EVENT_NATURAL_PERSON_REGISTERED)
     public Mono<UUID> registerNaturalPerson(RegisterNaturalPersonCommand cmd, SagaContext ctx) {
-        return commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
+        return cmd == null
+                ? Mono.empty()
+                : commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
     }
 
     public Mono<Void> removeNaturalPerson(UUID naturalPersonId, SagaContext ctx) {
-        return commandBus.send(new RemoveNaturalPersonCommand((UUID) ctx.variables().get(CTX_PARTY_ID), naturalPersonId));
+        return naturalPersonId == null
+                ? Mono.empty()
+                : commandBus.send(new RemoveNaturalPersonCommand((UUID) ctx.variables().get(CTX_PARTY_ID), naturalPersonId));
+    }
+
+    @SagaStep(id = STEP_REGISTER_LEGAL_ENTITY, compensate = COMPENSATE_REMOVE_LEGAL_ENTITY, dependsOn = STEP_REGISTER_PARTY)
+    @StepEvent(type = EVENT_LEGAL_ENTITY_REGISTERED)
+    public Mono<UUID> registerLegalEntity(RegisterLegalEntityCommand cmd, SagaContext ctx) {
+        return cmd == null
+                ? Mono.empty()
+                : commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
+    }
+
+    public Mono<Void> removeLegalEntity(UUID legalEntityId, SagaContext ctx) {
+        return legalEntityId == null
+                ? Mono.empty()
+                : commandBus.send(new RemoveLegalEntityCommand((UUID) ctx.variables().get(CTX_PARTY_ID), legalEntityId));
     }
 
     @SagaStep(id = STEP_REGISTER_STATUS_ENTRY, compensate = COMPENSATE_REMOVE_STATUS_ENTRY, dependsOn = STEP_REGISTER_PARTY)
@@ -92,11 +112,15 @@ public class RegisterCustomerSaga {
     @SagaStep(id = STEP_REGISTER_PEP, compensate = COMPENSATE_REMOVE_PEP, dependsOn = STEP_REGISTER_PARTY)
     @StepEvent(type = EVENT_PEP_REGISTERED)
     public Mono<UUID> registerPep(RegisterPepCommand cmd, SagaContext ctx) {
-        return commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
+        return cmd == null
+                ? Mono.empty()
+                : commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
     }
 
     public Mono<Void> removePep(UUID pepId, SagaContext ctx) {
-        return commandBus.send(new RemovePepCommand((UUID) ctx.variables().get(CTX_PARTY_ID), pepId));
+        return pepId == null
+                ? Mono.empty()
+                : commandBus.send(new RemovePepCommand((UUID) ctx.variables().get(CTX_PARTY_ID), pepId));
     }
 
     @SagaStep(id = STEP_REGISTER_IDENTITY_DOCUMENT, compensate = COMPENSATE_REMOVE_IDENTITY_DOCUMENT, dependsOn = STEP_REGISTER_PARTY)
@@ -152,11 +176,15 @@ public class RegisterCustomerSaga {
     @SagaStep(id = STEP_REGISTER_CONSENT, compensate = COMPENSATE_REMOVE_CONSENT, dependsOn = STEP_REGISTER_PARTY)
     @StepEvent(type = EVENT_CONSENT_REGISTERED)
     public Mono<UUID> registerConsent(RegisterConsentCommand cmd, SagaContext ctx) {
-        return commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
+        return cmd == null
+                ? Mono.empty()
+                : commandBus.send(cmd.withPartyId((UUID) ctx.variables().get(CTX_PARTY_ID)));
     }
 
     public Mono<Void> removeConsent(UUID consentId, SagaContext ctx) {
-        return commandBus.send(new RemoveConsentCommand((UUID) ctx.variables().get(CTX_PARTY_ID), consentId));
+        return consentId == null
+                ? Mono.empty()
+                : commandBus.send(new RemoveConsentCommand((UUID) ctx.variables().get(CTX_PARTY_ID), consentId));
     }
 
     @SagaStep(id = STEP_REGISTER_PARTY_PROVIDER, compensate = COMPENSATE_REMOVE_PARTY_PROVIDER, dependsOn = STEP_REGISTER_PARTY)
@@ -176,7 +204,7 @@ public class RegisterCustomerSaga {
     }
 
     public Mono<Void> removePartyRelationship(UUID partyRelationshipId, SagaContext ctx) {
-        return commandBus.send(new RemovePartyRelationshipCommand((UUID) ctx.variables().get(CTX_PARTY_ID), partyRelationshipId));
+        return commandBus.send(new RemovePartyRelationshipCommand(partyRelationshipId));
     }
 
     @SagaStep(id = STEP_REGISTER_PARTY_GROUP_MEMBERSHIP, compensate = COMPENSATE_REMOVE_PARTY_GROUP_MEMBERSHIP, dependsOn = STEP_REGISTER_PARTY)

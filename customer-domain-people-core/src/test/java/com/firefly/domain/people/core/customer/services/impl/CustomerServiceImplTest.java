@@ -2,9 +2,8 @@ package com.firefly.domain.people.core.customer.services.impl;
 
 import com.firefly.domain.people.core.customer.commands.RegisterCustomerCommand;
 import com.firefly.domain.people.core.customer.commands.UpdateCustomerCommand;
-import com.firefly.domain.people.core.customer.services.impl.CustomerServiceImpl;
 import com.firefly.domain.people.core.customer.workflows.RegisterCustomerSaga;
-import com.firefly.domain.people.core.customer.workflows.UpdateCustomerNameSaga;
+import com.firefly.domain.people.core.customer.workflows.UpdateCustomerSaga;
 import com.firefly.transactional.core.SagaResult;
 import com.firefly.transactional.engine.SagaEngine;
 import com.firefly.transactional.engine.StepInputs;
@@ -63,7 +62,7 @@ class CustomerServiceImplTest {
     void testUpdateCustomer_ShouldExecuteSaga() {
         // Given
         UpdateCustomerCommand command = mock(UpdateCustomerCommand.class);
-        when(sagaEngine.execute(eq(UpdateCustomerNameSaga.class), any(StepInputs.class)))
+        when(sagaEngine.execute(eq(UpdateCustomerSaga.class), any(StepInputs.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         // When
@@ -74,7 +73,7 @@ class CustomerServiceImplTest {
                 .expectNext(sagaResult)
                 .verifyComplete();
 
-        verify(sagaEngine).execute(eq(UpdateCustomerNameSaga.class), any(StepInputs.class));
+        verify(sagaEngine).execute(eq(UpdateCustomerSaga.class), any(StepInputs.class));
     }
 
 
